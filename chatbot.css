@@ -298,8 +298,8 @@
     right: 20px;
     width: 60px;
     height: 60px;
-    background-color: var(--accent-yellow);
-    color: var(--primary-bg);
+    background-color: var(--button-blue);
+    color: var(--primary-text);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -313,7 +313,7 @@
 
 .chatbot-toggle:hover {
     transform: scale(1.1);
-    background-color: #e0a800;
+    background-color: var(--button-blue-hover);
 }
 
 .chatbot-toggle i {
