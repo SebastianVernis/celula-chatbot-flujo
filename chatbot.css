@@ -3,9 +3,9 @@
     --primary-bg: #111827;
     --primary-text: #ffffff;
     --secondary-text: #e0e0e0;
-    --accent-yellow: #FBBF24;
     --button-blue: #3d9be9;
     --button-blue-hover: #2b689c;
+    --accent-yellow: #3d9be9;
     --card-bg: rgba(17, 24, 39, 0.8);
     --overlay-bg: rgba(17, 24, 39, 0.4);
     --chatbot-width: 350px;
@@ -112,7 +112,7 @@
     text-decoration: underline;
 }
 
-.bot-message ul, 
+.bot-message ul,
 .bot-message ol {
     padding-left: 20px;
     margin: 10px 0;
@@ -187,6 +187,71 @@
 
 /* Lead Form */
 .lead-form {
+    position: fixed;
+    bottom: 90px;
+    right: 20px;
+    width: 350px;
+    max-width: calc(100vw - 40px);
+    background: var(--primary-bg);
+    color: var(--primary-text);
+    border-radius: 15px;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.4);
+    overflow: hidden;
+    display: none;
+    flex-direction: column;
+    opacity: 0;
+    transform: translateY(20px) scale(0.9);
+    transition: all 0.3s ease;
+    z-index: 9999;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.lead-form.active {
+    display: flex;
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+.lead-form-header {
+    padding: 15px;
+    background: var(--card-bg);
+    color: white;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.chatbot-logo {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    margin-right: 10px;
+    object-fit: cover;
+}
+
+.lead-form-header h2 {
+    flex: 1;
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.lead-form-close {
+    font-size: 24px;
+    background: transparent;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 0 5px;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+}
+
+.lead-form-close:hover {
+    opacity: 1;
+}
+
+.lead-form-body {
     padding: 20px;
     display: flex;
     flex-direction: column;
@@ -299,7 +364,7 @@
     width: 60px;
     height: 60px;
     background-color: var(--button-blue);
-    color: var(--primary-text);
+    color: var(--primary-bg);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -362,7 +427,7 @@
         max-height: 60vh;
         bottom: 80px;
     }
-    
+
     .chat-window {
         max-height: calc(60vh - 130px);
     }

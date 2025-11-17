@@ -11,40 +11,25 @@ class CelulaChatbotManager {
         this.sendBtn = document.getElementById('send-btn');
         this.closeBtn = document.getElementById('chat-close');
         this.leadForm = document.getElementById('lead-form');
+        this.chatWindowContainer = document.getElementById('chat-window-container');
         this.chatInputArea = document.getElementById('chat-input-area');
         this.emailSent = false; // Flag para evitar envíos múltiples
         this.sessionStartTime = new Date().toISOString();
-        
+
         this.init();
     }
 
     async init() {
         this.setupEventListeners();
-        const { chatHistory, leadData, isChatActive } = this.loadState();
-        this.chatHistory = chatHistory;
-        this.leadData = leadData;
-
-        const chatWindowContainer = document.getElementById('chat-window-container');
-
-        if (isChatActive) {
-            this.leadForm.style.display = 'none';
-            this.leadForm.classList.remove('active');
-            chatWindowContainer.style.display = 'flex';
-            chatWindowContainer.classList.add('active');
-            this.chatWindow.style.display = 'flex';
-            this.chatInputArea.style.display = 'flex';
-            this.repopulateChat();
-        }
-        // Si no hay chat activo, no hacemos nada. El usuario debe hacer clic en el botón para abrir el formulario.
+        this.loadState();
     }
 
     saveState() {
-        const chatWindowContainer = document.getElementById('chat-window-container');
         const state = {
             chatHistory: this.chatHistory,
             leadData: this.leadData,
-            isChatActive: chatWindowContainer && chatWindowContainer.style.display === 'flex',
-            lastUpdated: new Date().getTime()
+            isChatActive: this.chatWindowContainer.classList.contains('active'),
+            lastUpdated: new Date().getTime() // Añadir timestamp para rastrear la frescura de los datos
         };
         localStorage.setItem('celulaChatbotState', JSON.stringify(state));
     }
@@ -54,30 +39,41 @@ class CelulaChatbotManager {
         if (savedState) {
             try {
                 const state = JSON.parse(savedState);
-                const isRecent = state.lastUpdated && (new Date().getTime() - state.lastUpdated) < 24 * 60 * 60 * 1000;
-                
+
+                // Verificar si los datos son recientes (menos de 24 horas)
+                const isRecent = state.lastUpdated &&
+                                 (new Date().getTime() - state.lastUpdated) < 24 * 60 * 60 * 1000;
+
+                // Usar datos guardados solo si son recientes
                 if (isRecent) {
-                    return {
-                        chatHistory: state.chatHistory || [],
-                        leadData: state.leadData || {},
-                        isChatActive: state.isChatActive || false
-                    };
+                    this.chatHistory = state.chatHistory || [];
+                    this.leadData = state.leadData || {};
+
+                    // Only pre-fill the form if leadData exists, but don't open anything automatically
+                    if (Object.keys(this.leadData).length > 0) {
+                        this.fillLeadForm();
+                    }
+                    // The chatbot window should NOT be opened automatically here.
+                    // The chatbot-toggle button will handle opening the lead form or chat.
+                } else {
+                    console.log("Datos del chatbot antiguos, iniciando nueva conversación");
+                    this.resetState();
                 }
             } catch (error) {
                 console.error("Error al cargar el estado del chatbot:", error);
+                this.resetState();
             }
+        } else {
+            this.resetState();
         }
-        // Si no hay estado guardado o no es reciente, resetea
-        localStorage.removeItem('celulaChatbotState');
-        return { chatHistory: [], leadData: {}, isChatActive: false };
     }
-    
+
     resetState() {
         this.chatHistory = [];
         this.leadData = {};
         localStorage.removeItem('celulaChatbotState');
     }
-    
+
     fillLeadForm() {
         // Autorellenar el formulario con datos guardados
         if (this.leadData.name) {
@@ -103,25 +99,25 @@ class CelulaChatbotManager {
             message.parts[0].text.includes('DIRECTRICES CRÍTICAS:')) {
             return false;
         }
-        
+
         // No mostrar la respuesta de inicialización del sistema
-        if (message.role === 'model' && 
+        if (message.role === 'model' &&
             message.parts[0].text.includes('¡Entendido! Soy el Asistente Musical de Grupo Musical Versátil La Célula')) {
             return false;
         }
-        
+
         return true;
     }
-    
+
     // Filtra los mensajes que son visibles para el usuario
     getVisibleMessages() {
         return this.chatHistory.filter(message => this.isVisibleMessage(message));
     }
-    
+
     repopulateChat() {
         // Limpiar la ventana de chat
         this.chatWindow.innerHTML = '';
-        
+
         // Mostrar solo los mensajes visibles para el usuario
         this.getVisibleMessages().forEach(item => {
             if (item.role === 'user') {
@@ -135,42 +131,27 @@ class CelulaChatbotManager {
     setupEventListeners() {
         // Evento para el botón flotante del chatbot (abrir chatbot)
         document.getElementById('chatbot-toggle')?.addEventListener('click', () => {
-            // Si ya tenemos datos del usuario, abrir directamente el chat o mostrar formulario prelleno
             if (this.chatHistory.length > 3) {
-                // Suficiente historial para continuar conversación
-                this.leadForm.style.display = 'none';
                 this.leadForm.classList.remove('active');
-                
-                const chatWindowContainer = document.getElementById('chat-window-container');
-                chatWindowContainer.style.display = 'flex';
-                chatWindowContainer.classList.add('active');
-                
-                this.chatWindow.style.display = 'flex';
+                this.chatWindowContainer.classList.add('active');
                 this.chatInputArea.style.display = 'flex';
             } else if (Object.keys(this.leadData).length > 0) {
-                // Tenemos datos del usuario pero no suficiente conversación
                 this.fillLeadForm();
-                this.leadForm.style.display = 'flex';
                 this.leadForm.classList.add('active');
             } else {
-                // Nueva conversación
-                this.leadForm.style.display = 'flex';
                 this.leadForm.classList.add('active');
             }
         });
-        
+
         // Evento para cerrar el formulario de lead
         document.getElementById('lead-form-close')?.addEventListener('click', () => {
-            this.leadForm.style.display = 'none';
             this.leadForm.classList.remove('active');
             this.saveState();
         });
-        
+
         // Evento para cerrar la ventana de chat
         document.getElementById('chat-close')?.addEventListener('click', () => {
-            const chatWindowContainer = document.getElementById('chat-window-container');
-            chatWindowContainer.style.display = 'none';
-            chatWindowContainer.classList.remove('active');
+            this.chatWindowContainer.classList.remove('active');
             this.saveState();
         });
 
@@ -182,26 +163,20 @@ class CelulaChatbotManager {
         resetChat.innerHTML = '🗑️';
         resetChat.title = 'Borrar esta conversación y comenzar de nuevo';
         resetChat.style.cssText = 'position: absolute; right: 40px; top: 15px; background: transparent; border: none; color: white; cursor: pointer; font-size: 16px;';
-        
+
         // Añadir el botón al encabezado del chat
         const chatHeader = document.querySelector('.chat-header');
         if (chatHeader) {
             chatHeader.appendChild(resetChat);
         }
-        
+
         // Evento para el botón de restablecer chat
         resetChat.addEventListener('click', () => {
             if (confirm('¿Estás seguro de borrar toda la conversación y comenzar de nuevo?')) {
                 this.resetState();
-                // Cerrar la ventana de chat
-                document.getElementById('chat-window-container').style.display = 'none';
-                document.getElementById('chat-window-container').classList.remove('active');
-                // Limpiar el chat
+                this.chatWindowContainer.classList.remove('active');
                 this.chatWindow.innerHTML = '';
-                // Restablecemos el formulario
                 document.getElementById('chatbot-lead-form').reset();
-                // Mostramos el formulario
-                this.leadForm.style.display = 'flex';
                 this.leadForm.classList.add('active');
             }
         });
@@ -226,12 +201,12 @@ class CelulaChatbotManager {
             e.preventDefault();
             this.handleFormSubmission();
         });
-        
+
         // Agregar detección de eventos de cierre de página para guardar estado
         window.addEventListener('beforeunload', () => {
             this.saveState();
         });
-        
+
         // Guardar periódicamente el estado mientras se usa el chat
         setInterval(() => {
             if (this.chatHistory.length > 0) {
@@ -258,18 +233,10 @@ class CelulaChatbotManager {
         this.leadData.eventType = eventTypeInput.value.trim();
 
         if (this.leadData.name && this.leadData.email && this.leadData.phone) {
-            // Ocultar formulario
-            this.leadForm.style.display = 'none';
             this.leadForm.classList.remove('active');
-            
-            // Mostrar ventana de chat
-            const chatWindowContainer = document.getElementById('chat-window-container');
-            chatWindowContainer.style.display = 'flex';
-            chatWindowContainer.classList.add('active');
-            
-            this.chatWindow.style.display = 'flex';
+            this.chatWindowContainer.classList.add('active');
             this.chatInputArea.style.display = 'flex';
-            
+
             await this.startChat();
             this.saveState();
         }
@@ -278,7 +245,7 @@ class CelulaChatbotManager {
     async startChat() {
         // loadInitialContext ahora devuelve true si necesita añadir saludo
         const needsGreeting = await this.loadInitialContext();
-        
+
         // Solo añadir el saludo si es necesario (no existe ya en el historial)
         if (needsGreeting) {
             // Mensaje de saludo personalizado para La Célula con enfoque SPIN
@@ -291,15 +258,15 @@ Estoy aquí para ayudarte a encontrar la **solución musical perfecta** para tu 
 • Tamaño de evento (desde íntimos hasta masivos)
 
 ¿Podrías contarme más detalles sobre el evento que estás planeando? 🎉`;
-            
+
             // Añadir al historial y mostrar al usuario
             this.chatHistory.push({
                 role: "model",
                 parts: [{ text: greeting }]
             });
-            
+
             this.appendMessage(greeting, 'bot');
-            
+
             // Guardar el estado para mantener la coherencia entre páginas
             this.saveState();
         }
@@ -421,7 +388,7 @@ Cuando hayas recopilado: tipo de evento, fecha, número de invitados y estilo mu
 2. Enviarte una propuesta detallada por correo electrónico
 ¿Qué opción prefieres para avanzar con tu reserva?"
 
-Los datos del usuario son: 
+Los datos del usuario son:
 Nombre: ${this.leadData.name || "[Sin nombre]"}
 Correo electrónico: ${this.leadData.email || "[Sin email]"}
 Número de teléfono: ${this.leadData.phone || "[Sin teléfono]"}
@@ -457,9 +424,9 @@ Tipo de evento: ${this.leadData.eventType || "[Sin especificar]"}`;
     }
 
     async getBotResponse(message) {
-        this.chatHistory.push({ 
-            role: "user", 
-            parts: [{ text: message }] 
+        this.chatHistory.push({
+            role: "user",
+            parts: [{ text: message }]
         });
 
         const payload = {
@@ -484,9 +451,9 @@ Tipo de evento: ${this.leadData.eventType || "[Sin especificar]"}`;
             const botMessage = result.candidates?.[0]?.content?.parts?.[0]?.text || 
                              'Lo siento, no pude procesar tu mensaje. ¿Podrías contactarnos directamente por WhatsApp al 55 3541 2631?';
             
-            this.chatHistory.push({ 
-                role: "model", 
-                parts: [{ text: botMessage }] 
+            this.chatHistory.push({
+                role: "model",
+                parts: [{ text: botMessage }]
             });
             
             return botMessage;
@@ -555,7 +522,7 @@ Tipo de evento: ${this.leadData.eventType || "[Sin especificar]"}`;
         // Resaltar tipos de eventos
         const eventTypes = ['boda', 'bodas', 'xv años', 'quinceañera', 'graduación', 'graduaciones', 'fiesta', 'fiestas', 'corporativo', 'empresarial'];
         eventTypes.forEach(event => {
-            const regex = new RegExp(`\\b${event}\\b`, 'gi');
+            const regex = new RegExp(`\b${event}\b`, 'gi');
             processed = processed.replace(regex, `<span style="color: #3D9BE9; font-weight: 600;">$&</span>`);
         });
         
@@ -741,6 +708,11 @@ Tipo de evento: ${this.leadData.eventType || "[Sin especificar]"}`;
 document.addEventListener('DOMContentLoaded', () => {
     const chatbotManager = new CelulaChatbotManager();
     
+    // Inicializar estado visual de los componentes del chatbot
+    const chatbotToggle = document.getElementById('chatbot-toggle');
+    const leadForm = document.getElementById('lead-form');
+    const chatWindowContainer = document.getElementById('chat-window-container');
+
     // Añadir estilo para el botón de restablecer chat
     const style = document.createElement('style');
     style.textContent = `
@@ -771,7 +743,11 @@ document.addEventListener('DOMContentLoaded', () => {
     `;
     document.head.appendChild(style);
     
-    console.log('Chatbot La Célula inicializado correctamente con persistencia entre páginas');
+    if (chatbotToggle && leadForm && chatWindowContainer) {
+        console.log('Chatbot La Célula inicializado correctamente con persistencia entre páginas');
+    } else {
+        console.error('No se pudieron encontrar elementos del chatbot');
+    }
     
     // Mostrar mensaje de persistencia en el chatbot (sólo en desarrollo)
     if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
