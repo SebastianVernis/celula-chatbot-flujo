@@ -1,0 +1,462 @@
+<!-- Chatbot La Célula - Elemento para incluir en páginas del sitio -->
+<div id="celula-chatbot-container" class="celula-chatbot-container">
+    <!-- Botón de chatbot -->
+    <button id="chatbot-toggle" class="chatbot-toggle" aria-label="Abrir asistente musical">
+        <img src="assets/icons/whatsapp-icon.png" alt="Chat" class="chatbot-icon">
+        <span class="chatbot-tooltip">¿Necesitas ayuda con tu evento musical?</span>
+    </button>
+    
+    <!-- Formulario inicial de contacto -->
+    <div id="lead-form" class="lead-form">
+        <div class="lead-form-header">
+            <img src="assets/logo/logo.jpg" alt="La Célula" class="chatbot-logo">
+            <h2>Asistente Musical La Célula</h2>
+            <button id="lead-form-close" class="lead-form-close" aria-label="Cerrar">×</button>
+        </div>
+        <div class="lead-form-body">
+            <p>¡Bienvenido! 🎵 Para brindarte una experiencia personalizada, necesitamos algunos datos:</p>
+            <form id="chatbot-lead-form">
+                <div class="form-group">
+                    <label for="name-input">Nombre</label>
+                    <input type="text" id="name-input" placeholder="Tu nombre" required>
+                </div>
+                <div class="form-group">
+                    <label for="email-input">Email</label>
+                    <input type="email" id="email-input" placeholder="correo@ejemplo.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone-input">Teléfono</label>
+                    <input type="tel" id="phone-input" placeholder="Tu número de teléfono" required>
+                </div>
+                <div class="form-group">
+                    <label for="event-type-input">Tipo de evento</label>
+                    <select id="event-type-input" required>
+                        <option value="">Selecciona...</option>
+                        <option value="Boda">Boda</option>
+                        <option value="XV años">XV años</option>
+                        <option value="Evento Corporativo">Evento Corporativo</option>
+                        <option value="Fiesta privada">Fiesta privada</option>
+                        <option value="Graduación">Graduación</option>
+                        <option value="Otro">Otro</option>
+                    </select>
+                </div>
+                <button type="submit" class="lead-form-submit">Iniciar chat</button>
+            </form>
+            <p class="lead-form-privacy">Tu información es confidencial y solo se utilizará para brindarte atención personalizada.</p>
+        </div>
+    </div>
+    
+    <!-- Ventana de chat -->
+    <div id="chat-window-container" class="chat-window-container">
+        <div class="chat-header">
+            <img src="assets/logo/logo.jpg" alt="La Célula" class="chatbot-logo">
+            <h2>Asistente Musical</h2>
+            <button id="chat-close" class="chat-close" aria-label="Cerrar">×</button>
+        </div>
+        <div id="chat-window" class="chat-window"></div>
+        <div id="chat-input-area" class="chat-input-area">
+            <textarea id="user-input" placeholder="Escribe tu mensaje aquí..." rows="1"></textarea>
+            <button id="send-btn" class="send-btn" aria-label="Enviar mensaje">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
+                    <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path>
+                </svg>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Estilos del chatbot -->
+<style>
+    .celula-chatbot-container {
+        --chatbot-primary: #000000;
+        --chatbot-secondary: #3D9BE9;
+        --chatbot-text: #333333;
+        --chatbot-light-bg: #f5f5f5;
+        --chatbot-border-radius: 15px;
+        --chatbot-box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+        --chatbot-font: 'Open Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+        
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        z-index: 10000;
+        font-family: var(--chatbot-font);
+    }
+    
+    /* Botón flotante del chatbot */
+    .chatbot-toggle {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: var(--chatbot-secondary);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        box-shadow: var(--chatbot-box-shadow);
+        border: none;
+        position: relative;
+        transition: transform 0.3s ease;
+    }
+    
+    .chatbot-toggle:hover {
+        transform: scale(1.1);
+    }
+    
+    .chatbot-icon {
+        width: 30px;
+        height: 30px;
+        filter: brightness(0) invert(1);
+    }
+    
+    .chatbot-tooltip {
+        position: absolute;
+        right: 70px;
+        background: var(--chatbot-primary);
+        color: white;
+        padding: 10px 15px;
+        border-radius: var(--chatbot-border-radius);
+        font-size: 14px;
+        white-space: nowrap;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+    }
+    
+    .chatbot-tooltip:after {
+        content: '';
+        position: absolute;
+        right: -8px;
+        top: 50%;
+        transform: translateY(-50%);
+        border-width: 8px 0 8px 8px;
+        border-style: solid;
+        border-color: transparent transparent transparent var(--chatbot-primary);
+    }
+    
+    .chatbot-toggle:hover .chatbot-tooltip {
+        opacity: 1;
+    }
+    
+    /* Formulario de captura de datos */
+    .lead-form {
+        position: absolute;
+        bottom: 80px;
+        right: 0;
+        width: 350px;
+        background: white;
+        border-radius: var(--chatbot-border-radius);
+        box-shadow: var(--chatbot-box-shadow);
+        overflow: hidden;
+        display: none;
+        flex-direction: column;
+        opacity: 0;
+        transform: translateY(20px) scale(0.9);
+        transition: all 0.3s ease;
+    }
+    
+    .lead-form.active {
+        display: flex;
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+    
+    .lead-form-header {
+        padding: 15px;
+        background: var(--chatbot-primary);
+        color: white;
+        display: flex;
+        align-items: center;
+    }
+    
+    .chatbot-logo {
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        margin-right: 10px;
+    }
+    
+    .lead-form-header h2 {
+        flex: 1;
+        margin: 0;
+        font-size: 16px;
+        font-weight: 600;
+    }
+    
+    .lead-form-close {
+        font-size: 24px;
+        background: transparent;
+        border: none;
+        color: white;
+        cursor: pointer;
+        padding: 0 5px;
+    }
+    
+    .lead-form-body {
+        padding: 20px;
+    }
+    
+    .form-group {
+        margin-bottom: 15px;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-size: 14px;
+        color: var(--chatbot-text);
+        font-weight: 600;
+    }
+    
+    .form-group input, 
+    .form-group select {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 14px;
+        color: var(--chatbot-text);
+        font-family: var(--chatbot-font);
+    }
+    
+    .lead-form-submit {
+        width: 100%;
+        padding: 12px;
+        background: var(--chatbot-secondary);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        margin-top: 10px;
+        transition: background-color 0.3s;
+        font-family: var(--chatbot-font);
+    }
+    
+    .lead-form-submit:hover {
+        background-color: #3287d1;
+    }
+    
+    .lead-form-privacy {
+        font-size: 12px;
+        color: #777;
+        text-align: center;
+        margin-top: 15px;
+    }
+    
+    /* Ventana de chat */
+    .chat-window-container {
+        position: absolute;
+        bottom: 80px;
+        right: 0;
+        width: 350px;
+        height: 500px;
+        background: white;
+        border-radius: var(--chatbot-border-radius);
+        box-shadow: var(--chatbot-box-shadow);
+        overflow: hidden;
+        display: none;
+        flex-direction: column;
+        opacity: 0;
+        transform: translateY(20px) scale(0.9);
+        transition: all 0.3s ease;
+    }
+    
+    .chat-window-container.active {
+        display: flex;
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+    
+    .chat-header {
+        padding: 15px;
+        background: var(--chatbot-primary);
+        color: white;
+        display: flex;
+        align-items: center;
+    }
+    
+    .chat-header h2 {
+        flex: 1;
+        margin: 0;
+        font-size: 16px;
+        font-weight: 600;
+    }
+    
+    .chat-close {
+        font-size: 24px;
+        background: transparent;
+        border: none;
+        color: white;
+        cursor: pointer;
+        padding: 0 5px;
+    }
+    
+    .chat-window {
+        flex: 1;
+        padding: 15px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .user-message, .bot-message {
+        max-width: 80%;
+        padding: 12px 15px;
+        border-radius: var(--chatbot-border-radius);
+        font-size: 14px;
+        line-height: 1.5;
+    }
+    
+    .user-message {
+        background-color: var(--chatbot-secondary);
+        color: white;
+        align-self: flex-end;
+        border-bottom-right-radius: 5px;
+    }
+    
+    .bot-message {
+        background-color: var(--chatbot-light-bg);
+        color: var(--chatbot-text);
+        align-self: flex-start;
+        border-bottom-left-radius: 5px;
+    }
+    
+    .bot-message a {
+        color: var(--chatbot-secondary);
+        text-decoration: underline;
+    }
+    
+    .bot-message strong {
+        font-weight: 700;
+        color: var(--chatbot-primary);
+    }
+    
+    .chat-input-area {
+        display: none;
+        padding: 15px;
+        border-top: 1px solid #eee;
+        gap: 10px;
+    }
+    
+    #user-input {
+        flex: 1;
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+        border-radius: 20px;
+        font-size: 14px;
+        resize: none;
+        font-family: var(--chatbot-font);
+        max-height: 120px;
+        overflow-y: auto;
+    }
+    
+    .send-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: var(--chatbot-secondary);
+        color: white;
+        border: none;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    
+    .send-btn:hover {
+        background-color: var(--chatbot-primary);
+    }
+    
+    .typing-indicator {
+        display: flex;
+        align-items: center;
+        background-color: var(--chatbot-light-bg);
+        padding: 12px 15px;
+        border-radius: var(--chatbot-border-radius);
+        align-self: flex-start;
+        border-bottom-left-radius: 5px;
+        margin-bottom: 10px;
+    }
+    
+    .typing-indicator span {
+        height: 10px;
+        width: 10px;
+        float: left;
+        margin: 0 1px;
+        background-color: var(--chatbot-secondary);
+        display: block;
+        border-radius: 50%;
+        opacity: 0.4;
+        animation: typing 1s infinite;
+    }
+    
+    .typing-indicator span:nth-child(1) {
+        animation-delay: 0s;
+    }
+    
+    .typing-indicator span:nth-child(2) {
+        animation-delay: 0.3s;
+    }
+    
+    .typing-indicator span:nth-child(3) {
+        animation-delay: 0.6s;
+    }
+    
+    @keyframes typing {
+        0% { transform: translateY(0px); }
+        28% { transform: translateY(-5px); }
+        44% { transform: translateY(0px); }
+    }
+    
+    @media (max-width: 600px) {
+        .celula-chatbot-container {
+            bottom: 20px;
+            right: 20px;
+        }
+        
+        .lead-form, .chat-window-container {
+            width: 90vw;
+            right: -10px;
+        }
+        
+        .chatbot-tooltip {
+            display: none;
+        }
+        
+        .chat-window-container {
+            height: 70vh;
+        }
+    }
+</style>
+
+<!-- Script de inicialización del chatbot (carga el script principal de forma asíncrona) -->
+<script>
+    (function() {
+        // Cargar script principal del chatbot
+        const script = document.createElement('script');
+        script.src = './chatbot.js';
+        script.async = true;
+        document.body.appendChild(script);
+        
+        // Configurar eventos de botones
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggleBtn = document.getElementById('chatbot-toggle');
+            const leadForm = document.getElementById('lead-form');
+            const leadFormCloseBtn = document.getElementById('lead-form-close');
+            
+            // Mostrar formulario al hacer clic en el botón
+            toggleBtn.addEventListener('click', function() {
+                leadForm.classList.add('active');
+            });
+            
+            // Cerrar formulario
+            leadFormCloseBtn.addEventListener('click', function() {
+                leadForm.classList.remove('active');
+            });
+        });
+    })();
+</script>

@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Cotizador - Grupo Musical Versátil La Célula</title>
+    <meta name="description" content="Cotiza tu evento musical con Grupo Musical Versátil La Célula. Obtén un presupuesto personalizado para tu boda, fiesta o evento corporativo.">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://grupomusicalcelula.com/cotizador.html">
+    <meta property="og:title" content="Cotizador - Grupo Musical Versátil La Célula">
+    <meta property="og:description" content="Cotiza tu evento musical. Presupuesto personalizado para bodas, fiestas y eventos corporativos.">
+    <meta property="og:image" content="https://grupomusicalcelula.com/assets/gallery/banda-1.jpg">
+    
+    <!-- Theme Color -->
+    <meta name="theme-color" content="#000000">
+
+    <!-- Favicon -->
+    <link rel="icon" href="assets/logo/logo.jpg" type="image/jpeg">
+    <link rel="apple-touch-icon" href="assets/logo/logo.jpg">
+    <link rel="manifest" href="/manifest.json">
+
+    <!-- Preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Lobster:wght@400&family=Open+Sans:wght@400;600;700&family=Raleway:wght@400;600&display=swap" rel="stylesheet">
+
+    <!-- Estilos limpios -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- Header y Navegación -->
+    <header class="site-header" id="SITE_HEADER">
+        <nav class="nav-container">
+            <ul class="nav-menu" id="nav-menu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">INICIO</a>
+                </li>
+                <li class="nav-item">
+                    <a href="cotizador.html" class="nav-link active">COTIZADOR</a>
+                </li>
+                <li class="nav-item">
+                    <a href="blog.html" class="nav-link">Blog</a>
+                </li>
+            </ul>
+
+            <!-- Menú móvil -->
+            <button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Abrir menú">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </nav>
+    </header>
+
+    <!-- Contenido Principal -->
+    <main class="site-container">
+        <!-- Hero del Cotizador -->
+        <section class="hero-section hero-cotizador">
+            <div class="hero-content fade-in">
+                <h1 class="section-title hero-title-large">Cotizador</h1>
+                <p class="hero-title">Obtén un presupuesto personalizado para tu evento</p>
+            </div>
+        </section>
+
+        <!-- Formulario de Cotización -->
+        <section class="content-section">
+            <div class="main-content">
+                <div class="form-container">
+                    <h2 class="section-title">Solicita tu Cotización</h2>
+                    <p class="section-description">
+                        Completa el formulario y te contactaremos para brindarte un presupuesto personalizado
+                        para tu evento musical.
+                    </p>
+
+                    <div class="p-8 rounded-sm shadow-xl">
+
+                        <form id="contact-form" action="https://api.web3forms.com/submit" method="POST">
+
+                            <input type="hidden" name="access_key" value="c437c213-198c-4507-893a-9ecaca4af699">
+
+                            <div class="form-group">
+                                <label for="name" class="form-label">Nombre *</label>
+                                <input type="text" id="name" name="name" required class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label for="number" class="form-label">Número telefónico *</label>
+                                <input type="number" id="number" name="number" required class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label for="email" class="form-label">Email *</label>
+                                <input type="email" id="email" name="email" required class="form-input">
+                            </div>
+                            <div class="form-grid-2col">
+                                <div>
+                                    <label for="event-type" class="form-label">Tipo de Evento *</label>
+                                    <select id="event-type" name="event-type" required class="form-select">
+                                        <option value="" class="form-option">Selecciona el tipo de evento</option>
+                                        <option value="boda" class="form-option">Boda</option>
+                                        <option value="xv" class="form-option">XV Años</option>
+                                        <option value="corporativo" class="form-option">Evento Corporativo</option>
+                                        <option value="otro" class="form-option">Otro</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="event-date" class="form-label">Fecha del evento *</label>
+                                    <input type="date" id="event-date" name="event-date" required class="form-input">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="guests-contact" class="form-label">Número de Invitados</label>
+                                <select id="guests-contact" name="guests-contact" class="form-select">
+                                    <option value="" class="form-option">Selecciona el número de invitados</option>
+                                    <option value="50-100" class="form-option">50-100 invitados</option>
+                                    <option value="101-200" class="form-option">101-200 invitados</option>
+                                    <option value="201-500" class="form-option">201-500 invitados</option>
+                                    <option value="500+" class="form-option">Más de 500 invitados</option>
+                                </select>
+                            </div>
+                            <div class="mb-20">
+                                <h3 class="form-section-title">Ubicación del Evento</h3>
+                                <div>
+                                    <label for="city-contact" class="form-label">Ciudad/Área Metropolitana *</label>
+                                    <select id="city-contact" name="city-contact" required class="form-select">
+                                        <option value="" class="form-option">Selecciona una ciudad</option>
+                                        <option value="cdmx" class="form-option">Ciudad de México (CDMX)</option>
+                                        <option value="estado-mexico" class="form-option">Estado de México</option>
+                                        <option value="morelos" class="form-option">Morelos</option>
+                                        <option value="puebla" class="form-option">Puebla</option>
+                                        <option value="hidalgo" class="form-option">Hidalgo</option>
+                                    </select>
+                                </div>
+                            </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="message" class="form-label">Mensaje</label>
+                                <textarea id="message" name="message" rows="4"
+                                          placeholder="Cuéntanos más..."
+                                          class="form-textarea"></textarea>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary form-submit-full">
+                                Enviar Solicitud
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Información de contacto -->
+                    <div class="contact-info-container">
+                        <h3 class="contact-title">
+                            ¿Prefieres contactarnos directamente?
+                        </h3>
+                        <div class="contact-buttons">
+                            <a href="https://wa.me/+525535412631?text=Hola,%20me%20interesa%20cotizar%20mi%20evento..."
+                               target="_blank"
+                               class="btn btn-secondary">
+                                📱 WhatsApp
+                            </a>
+                            <a href="tel:+525535412631" class="btn btn-primary">
+                                📞 Llamar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-social">
+            <a href="https://wa.me/+525535412631?text=Hola,%20me%20interesa%20cotizar%20mi%20evento..."
+               target="_blank"
+               rel="noopener noreferrer"
+               aria-label="WhatsApp">
+                <img src="assets/icons/whatsapp-icon.png"
+                     alt="WhatsApp"
+                     class="social-icon">
+            </a>
+            <a href="https://www.facebook.com/grupocelula/"
+               target="_blank"
+               rel="noopener noreferrer"
+               aria-label="Facebook">
+                <img src="assets/icons/facebook-icon.png"
+                     alt="Facebook"
+                     class="social-icon">
+            </a>
+            <a href="https://www.youtube.com/user/GIOVASTUDIO1"
+               target="_blank"
+               rel="noopener noreferrer"
+               aria-label="YouTube">
+                <img src="assets/icons/youtube-icon.png"
+                     alt="YouTube"
+                     class="social-icon">
+            </a>
+            <a href="https://twitter.com/lacelula2"
+               target="_blank"
+               rel="noopener noreferrer"
+               aria-label="Twitter">
+                <img src="assets/icons/twitter-icon.png"
+                     alt="Twitter"
+                     class="social-icon">
+            </a>
+        </div>
+
+        <div class="footer-text">
+            <p>&copy; 2025 Grupo Musical Versátil La Célula. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript para el formulario -->
+    <script src="js/form-handler.js"></script>
+
+    <!-- Estilos adicionales para el formulario -->
+
+    <!-- Persistent Video Background -->
+    <script src="js/video-background.js"></script>
+    
+    <!-- Navegación -->
+    <script src="js/navigation.js"></script>
+    
+    <!-- Optimizaciones -->
+    <script src="js/optimizations.js"></script>
+    
+    <!-- Chatbot La Célula -->
+    <div id="celula-chatbot-container" class="celula-chatbot-container">
+        <!-- Botón de chatbot -->
+        <button id="chatbot-toggle" class="chatbot-toggle" aria-label="Abrir asistente musical">
+            <img src="assets/icons/whatsapp-icon.png" alt="Chat" class="chatbot-icon">
+            <span class="chatbot-tooltip">¿Necesitas ayuda con tu evento musical?</span>
+        </button>
+        
+        <!-- Formulario inicial de contacto -->
+        <div id="lead-form" class="lead-form">
+            <div class="lead-form-header">
+                <img src="assets/logo/logo.jpg" alt="La Célula" class="chatbot-logo">
+                <h2>Asistente Musical La Célula</h2>
+                <button id="lead-form-close" class="lead-form-close" aria-label="Cerrar">×</button>
+            </div>
+            <div class="lead-form-body">
+                <p>¡Bienvenido! 🎵 Para brindarte una experiencia personalizada, necesitamos algunos datos:</p>
+                <form id="chatbot-lead-form">
+                    <div class="form-group">
+                        <label for="name-input">Nombre</label>
+                        <input type="text" id="name-input" placeholder="Tu nombre" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email-input">Email</label>
+                        <input type="email" id="email-input" placeholder="correo@ejemplo.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone-input">Teléfono</label>
+                        <input type="tel" id="phone-input" placeholder="Tu número de teléfono" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="event-type-input">Tipo de evento</label>
+                        <select id="event-type-input">
+                            <option value="">Selecciona...</option>
+                            <option value="Boda">Boda</option>
+                            <option value="XV años">XV años</option>
+                            <option value="Evento Corporativo">Evento Corporativo</option>
+                            <option value="Fiesta privada">Fiesta privada</option>
+                            <option value="Graduación">Graduación</option>
+                            <option value="Otro">Otro</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="lead-form-submit">Iniciar chat</button>
+                </form>
+                <p class="lead-form-privacy">Tu información es confidencial y solo se utilizará para brindarte atención personalizada.</p>
+            </div>
+        </div>
+        
+        <!-- Ventana de chat -->
+        <div id="chat-window-container" class="chat-window-container">
+            <div class="chat-header">
+                <img src="assets/logo/logo.jpg" alt="La Célula" class="chatbot-logo">
+                <h2>Asistente Musical</h2>
+                <button id="chat-close" class="chat-close" aria-label="Cerrar">×</button>
+            </div>
+            <div id="chat-window" class="chat-window"></div>
+            <div id="chat-input-area" class="chat-input-area">
+                <textarea id="user-input" placeholder="Escribe tu mensaje aquí..." rows="1"></textarea>
+                <button id="send-btn" class="send-btn" aria-label="Enviar mensaje">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
+                        <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Estilos del chatbot -->
+    <style>
+        .celula-chatbot-container {
+            --chatbot-primary: #000000;
+            --chatbot-secondary: #3D9BE9;
+            --chatbot-text: #f8f8f8;
+            --chatbot-dark-bg: #333333;
+            --chatbot-darker-bg: #222222;
+            --chatbot-light-bg: #444444;
+            --chatbot-border-radius: 15px;
+            --chatbot-box-shadow: 0 5px 25px rgba(0, 0, 0, 0.4);
+            --chatbot-font: 'Open Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 10000;
+            font-family: var(--chatbot-font);
+        }
+        
+        /* Botón flotante del chatbot */
+        .chatbot-toggle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--chatbot-secondary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: var(--chatbot-box-shadow);
+            border: none;
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+        
+        .chatbot-toggle:hover {
+            transform: scale(1.1);
+        }
+        
+        .chatbot-icon {
+            width: 30px;
+            height: 30px;
+            filter: brightness(0) invert(1);
+        }
+        
+        .chatbot-tooltip {
+            position: absolute;
+            right: 70px;
+            background: var(--chatbot-primary);
+            color: white;
+            padding: 10px 15px;
+            border-radius: var(--chatbot-border-radius);
+            font-size: 14px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        
+        .chatbot-tooltip:after {
+            content: '';
+            position: absolute;
+            right: -8px;
+            top: 50%;
+            transform: translateY(-50%);
+            border-width: 8px 0 8px 8px;
+            border-style: solid;
+            border-color: transparent transparent transparent var(--chatbot-primary);
+        }
+        
+        .chatbot-toggle:hover .chatbot-tooltip {
+            opacity: 1;
+        }
+        
+        /* Formulario de captura de datos */
+        .lead-form {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            width: 350px;
+            background: var(--chatbot-darker-bg);
+            color: var(--chatbot-text);
+            border-radius: var(--chatbot-border-radius);
+            box-shadow: var(--chatbot-box-shadow);
+            overflow: hidden;
+            display: none;
+            flex-direction: column;
+            opacity: 0;
+            transform: translateY(20px) scale(0.9);
+            transition: all 0.3s ease;
+        }
+        
+        .lead-form.active {
+            display: flex;
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+        
+        .lead-form-header {
+            padding: 15px;
+            background: var(--chatbot-primary);
+            color: white;
+            display: flex;
+            align-items: center;
+        }
+        
+        .chatbot-logo {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        
+        .lead-form-header h2 {
+            flex: 1;
+            margin: 0;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        .lead-form-close {
+            font-size: 24px;
+            background: transparent;
+            border: none;
+            color: white;
+            cursor: pointer;
+            padding: 0 5px;
+        }
+        
+        .lead-form-body {
+            padding: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: var(--chatbot-text);
+            font-weight: 600;
+        }
+        
+        .form-group input, 
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #555;
+            background-color: var(--chatbot-dark-bg);
+            color: white;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: var(--chatbot-font);
+        }
+        
+        .form-group input::placeholder, 
+        .form-group select::placeholder {
+            color: #aaa;
+        }
+        
+        .lead-form-submit {
+            width: 100%;
+            padding: 12px;
+            background: var(--chatbot-secondary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.3s;
+            font-family: var(--chatbot-font);
+        }
+        
+        .lead-form-submit:hover {
+            background-color: #3287d1;
+        }
+        
+        .lead-form-privacy {
+            font-size: 12px;
+            color: #aaa;
+            text-align: center;
+            margin-top: 15px;
+        }
+        
+        /* Ventana de chat */
+        .chat-window-container {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            width: 350px;
+            height: 500px;
+            background: var(--chatbot-darker-bg);
+            color: var(--chatbot-text);
+            border-radius: var(--chatbot-border-radius);
+            box-shadow: var(--chatbot-box-shadow);
+            overflow: hidden;
+            display: none;
+            flex-direction: column;
+            opacity: 0;
+            transform: translateY(20px) scale(0.9);
+            transition: all 0.3s ease;
+        }
+        
+        .chat-window-container.active {
+            display: flex;
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+        
+        .chat-header {
+            padding: 15px;
+            background: var(--chatbot-primary);
+            color: white;
+            display: flex;
+            align-items: center;
+        }
+        
+        .chat-header h2 {
+            flex: 1;
+            margin: 0;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        .chat-close {
+            font-size: 24px;
+            background: transparent;
+            border: none;
+            color: white;
+            cursor: pointer;
+            padding: 0 5px;
+        }
+        
+        .chat-window {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background-color: var(--chatbot-dark-bg);
+        }
+        
+        .user-message, .bot-message {
+            max-width: 80%;
+            padding: 12px 15px;
+            border-radius: var(--chatbot-border-radius);
+            font-size: 14px;
+            line-height: 1.5;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        .user-message {
+            background-color: var(--chatbot-secondary);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 5px;
+        }
+        
+        .bot-message {
+            background-color: var(--chatbot-light-bg);
+            color: white;
+            align-self: flex-start;
+            border-bottom-left-radius: 5px;
+        }
+        
+        .bot-message a {
+            color: #6dc0ff;
+            text-decoration: underline;
+        }
+        
+        .bot-message strong {
+            font-weight: 700;
+            color: #ffcc00;
+        }
+        
+        .chat-input-area {
+            display: none;
+            padding: 15px;
+            border-top: 1px solid #555;
+            gap: 10px;
+            background-color: var(--chatbot-darker-bg);
+        }
+        
+        #user-input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid #555;
+            background-color: var(--chatbot-dark-bg);
+            color: white;
+            border-radius: 20px;
+            font-size: 14px;
+            resize: none;
+            font-family: var(--chatbot-font);
+            max-height: 120px;
+            overflow-y: auto;
+        }
+        
+        #user-input::placeholder {
+            color: #aaa;
+        }
+        
+        .send-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--chatbot-secondary);
+            color: white;
+            border: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .send-btn:hover {
+            background-color: var(--chatbot-primary);
+        }
+        
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            background-color: var(--chatbot-light-bg);
+            color: white;
+            padding: 12px 15px;
+            border-radius: var(--chatbot-border-radius);
+            align-self: flex-start;
+            border-bottom-left-radius: 5px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        .typing-indicator span {
+            height: 10px;
+            width: 10px;
+            float: left;
+            margin: 0 1px;
+            background-color: var(--chatbot-secondary);
+            display: block;
+            border-radius: 50%;
+            opacity: 0.4;
+            animation: typing 1s infinite;
+        }
+        
+        .typing-indicator span:nth-child(1) {
+            animation-delay: 0s;
+        }
+        
+        .typing-indicator span:nth-child(2) {
+            animation-delay: 0.3s;
+        }
+        
+        .typing-indicator span:nth-child(3) {
+            animation-delay: 0.6s;
+        }
+        
+        @keyframes typing {
+            0% { transform: translateY(0px); }
+            28% { transform: translateY(-5px); }
+            44% { transform: translateY(0px); }
+        }
+        
+        @media (max-width: 600px) {
+            .celula-chatbot-container {
+                bottom: 20px;
+                right: 20px;
+            }
+            
+            .lead-form, .chat-window-container {
+                width: 90vw;
+                right: -10px;
+            }
+            
+            .chatbot-tooltip {
+                display: none;
+            }
+            
+            .chat-window-container {
+                height: 70vh;
+            }
+        }
+    </style>
+
+    <!-- Script de inicialización del chatbot -->
+    <script src="chatbot.js"></script>
+    <script src="web3forms-cotizador.js"></script>
+</body>
+</html>

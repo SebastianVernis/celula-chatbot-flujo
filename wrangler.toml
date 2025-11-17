@@ -1,0 +1,13 @@
+name = "celula-chatbot-flujo"
+compatibility_date = "2024-01-01"
+pages_build_output_dir = "."
+
+# Este proyecto requiere secrets configurados en Cloudflare Dashboard
+# Ver SECRETS_CONFIGURATION.md para instrucciones
+
+[env.production]
+vars = { ENVIRONMENT = "production" }
+
+# Secrets requeridos (configurar en Cloudflare Dashboard):
+# - GEMINI_API_KEY: API key para Google Gemini AI
+# - WEB3FORMS_ACCESS_KEY: Access key para Web3Forms

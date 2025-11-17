@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asistente OMEXTL</title>
+    <style>
+        :root {
+            --primary-color: #1a1a1a;
+            --secondary-color: #0056b3;
+            --user-message-bg: #e9e9eb;
+            --bot-message-bg: #f1f1f1;
+            --background-color: #fff;
+            --text-color: #333;
+            --font-family: 'Segoe UI', 'Roboto', sans-serif;
+        }
+
+        body {
+            font-family: var(--font-family);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+
+        .chat-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+            font-size: 16px;
+            border-bottom: 2px solid var(--secondary-color);
+        }
+
+        #close-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+            line-height: 1;
+        }
+        
+        .chat-window {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: none; /* Hidden by default */
+            flex-direction: column;
+            gap: 15px;
+            background-color: #f9f9f9;
+        }
+
+        .message {
+            padding: 12px 18px;
+            border-radius: 18px;
+            max-width: 85%;
+            line-height: 1.6;
+            word-wrap: break-word;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .user-message {
+            background-color: var(--user-message-bg);
+            color: #000;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+
+        .bot-message {
+            background-color: var(--bot-message-bg);
+            border: 1px solid #e0e0e0;
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+
+        .bot-message p {
+            margin: 8px 0;
+            line-height: 1.5;
+        }
+
+        .bot-message p:first-child {
+            margin-top: 0;
+        }
+
+        .bot-message p:last-child {
+            margin-bottom: 0;
+        }
+
+        .bot-message ul, 
+        .bot-message ol {
+            margin: 8px 0;
+            padding-left: 20px;
+        }
+
+        .bot-message li {
+            margin: 4px 0;
+            line-height: 1.4;
+        }
+
+        .bot-message ul li {
+            list-style-type: disc;
+        }
+
+        .bot-message ol li {
+            list-style-type: decimal;
+        }
+
+        .bot-message strong {
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .bot-message em {
+            font-style: italic;
+            color: #444;
+        }
+
+        .bot-message a {
+            word-break: break-all;
+            display: inline-block;
+            margin: 2px 0;
+        }
+
+        .bot-message a:hover {
+            text-decoration: none;
+            opacity: 0.8;
+        }
+
+        .typing-indicator span {
+            display: inline-block;
+            animation: bounce 1.4s infinite;
+        }
+        .typing-indicator span:nth-of-type(2) { animation-delay: 0.2s; }
+        .typing-indicator span:nth-of-type(3) { animation-delay: 0.4s; }
+
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1.0); }
+        }
+
+        .disclaimer {
+            padding: 8px 15px;
+            background-color: #f7f7f7;
+            text-align: center;
+            font-size: 11px;
+            color: #777;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .chat-input {
+            display: none; /* Hidden by default */
+            padding: 12px;
+            border-top: 1px solid #e0e0e0;
+            background-color: #fff;
+            align-items: center;
+        }
+
+        .chat-input input {
+            flex-grow: 1;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            padding: 12px 18px;
+            font-size: 16px;
+            transition: border-color 0.2s;
+        }
+        .chat-input input:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+        }
+
+        .chat-input button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            margin-left: 10px;
+            cursor: pointer;
+            font-size: 20px;
+            transition: background-color 0.2s;
+        }
+        .chat-input button:hover {
+            background-color: var(--secondary-color);
+        }
+        .chat-input button:disabled {
+            background-color: #a0a0a0;
+            cursor: not-allowed;
+        }
+
+        #lead-form {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        #lead-form input {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 12px 18px;
+            font-size: 16px;
+        }
+
+        #lead-form button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 12px 18px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="chat-header">
+        <span>Asistente OMEXTL</span>
+        <button id="close-btn">&times;</button>
+    </div>
+
+    <form id="lead-form">
+        <input type="text" id="name-input" placeholder="Nombre" required>
+        <input type="email" id="email-input" placeholder="Correo electrónico" required>
+        <input type="tel" id="phone-input" placeholder="Número telefónico" required>
+        <button type="submit">Iniciar Chat</button>
+    </form>
+
+    <div class="chat-window" id="chat-window">
+        <!-- Messages will be appended here -->
+    </div>
+
+    <div class="disclaimer">
+        OMEX-IA puede cometer errores. Considera verificar la información importante.
+    </div>
+
+    <div class="chat-input" id="chat-input-area">
+        <input type="text" id="user-input" placeholder="Escribe tu consulta...">
+        <button id="send-btn">➤</button>
+    </div>
+
+    <script src="assets/js/chatbot.js"></script>
+</body>
+</html>
