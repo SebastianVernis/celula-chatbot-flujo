@@ -20,15 +20,31 @@ class CelulaChatbotManager {
 
     async init() {
         this.setupEventListeners();
-        this.loadState();
+        const { chatHistory, leadData, isChatActive } = this.loadState();
+        this.chatHistory = chatHistory;
+        this.leadData = leadData;
+
+        const chatWindowContainer = document.getElementById('chat-window-container');
+
+        if (isChatActive) {
+            this.leadForm.style.display = 'none';
+            this.leadForm.classList.remove('active');
+            chatWindowContainer.style.display = 'flex';
+            chatWindowContainer.classList.add('active');
+            this.chatWindow.style.display = 'flex';
+            this.chatInputArea.style.display = 'flex';
+            this.repopulateChat();
+        }
+        // Si no hay chat activo, no hacemos nada. El usuario debe hacer clic en el botón para abrir el formulario.
     }
 
     saveState() {
+        const chatWindowContainer = document.getElementById('chat-window-container');
         const state = {
             chatHistory: this.chatHistory,
             leadData: this.leadData,
-            isChatActive: this.leadForm.style.display === 'none',
-            lastUpdated: new Date().getTime() // Añadir timestamp para rastrear la frescura de los datos
+            isChatActive: chatWindowContainer && chatWindowContainer.style.display === 'flex',
+            lastUpdated: new Date().getTime()
         };
         localStorage.setItem('celulaChatbotState', JSON.stringify(state));
     }
@@ -38,45 +54,22 @@ class CelulaChatbotManager {
         if (savedState) {
             try {
                 const state = JSON.parse(savedState);
+                const isRecent = state.lastUpdated && (new Date().getTime() - state.lastUpdated) < 24 * 60 * 60 * 1000;
                 
-                // Verificar si los datos son recientes (menos de 24 horas)
-                const isRecent = state.lastUpdated && 
-                                 (new Date().getTime() - state.lastUpdated) < 24 * 60 * 60 * 1000;
-                
-                // Usar datos guardados solo si son recientes
                 if (isRecent) {
-                    this.chatHistory = state.chatHistory || [];
-                    this.leadData = state.leadData || {};
-    
-                    if (state.isChatActive) {
-                        // Ocultar formulario
-                        this.leadForm.style.display = 'none';
-                        this.leadForm.classList.remove('active');
-                        
-                        // Mostrar ventana de chat
-                        const chatWindowContainer = document.getElementById('chat-window-container');
-                        chatWindowContainer.style.display = 'flex';
-                        chatWindowContainer.classList.add('active');
-                        
-                        this.chatWindow.style.display = 'flex';
-                        this.chatInputArea.style.display = 'flex';
-                        this.repopulateChat();
-                    } else if (Object.keys(this.leadData).length > 0) {
-                        // Si tenemos datos del usuario pero el chat no estaba activo,
-                        // autorellenar el formulario pero no mostrarlo automáticamente
-                        this.fillLeadForm();
-                    }
-                } else {
-                    console.log("Datos del chatbot antiguos, iniciando nueva conversación");
-                    this.resetState();
+                    return {
+                        chatHistory: state.chatHistory || [],
+                        leadData: state.leadData || {},
+                        isChatActive: state.isChatActive || false
+                    };
                 }
             } catch (error) {
                 console.error("Error al cargar el estado del chatbot:", error);
-                this.resetState();
             }
-        } else {
-            this.resetState();
         }
+        // Si no hay estado guardado o no es reciente, resetea
+        localStorage.removeItem('celulaChatbotState');
+        return { chatHistory: [], leadData: {}, isChatActive: false };
     }
     
     resetState() {
@@ -229,7 +222,7 @@ class CelulaChatbotManager {
 
         this.userInput?.addEventListener('input', this.autoResize.bind(this));
 
-        this.leadForm?.addEventListener('submit', (e) => {
+        document.getElementById('chatbot-lead-form')?.addEventListener('submit', (e) => {
             e.preventDefault();
             this.handleFormSubmission();
         });
@@ -748,11 +741,6 @@ Tipo de evento: ${this.leadData.eventType || "[Sin especificar]"}`;
 document.addEventListener('DOMContentLoaded', () => {
     const chatbotManager = new CelulaChatbotManager();
     
-    // Inicializar estado visual de los componentes del chatbot
-    const chatbotToggle = document.getElementById('chatbot-toggle');
-    const leadForm = document.getElementById('lead-form');
-    const chatWindowContainer = document.getElementById('chat-window-container');
-    
     // Añadir estilo para el botón de restablecer chat
     const style = document.createElement('style');
     style.textContent = `
@@ -783,30 +771,7 @@ document.addEventListener('DOMContentLoaded', () => {
     `;
     document.head.appendChild(style);
     
-    if (chatbotToggle && leadForm && chatWindowContainer) {
-        // Si existe un estado guardado, restaurarlo - esto ya se hace en loadState()
-        // pero verificamos si la ventana debería estar visible por la configuración actual
-        const savedState = localStorage.getItem('celulaChatbotState');
-        if (savedState) {
-            try {
-                const state = JSON.parse(savedState);
-                const isRecent = state.lastUpdated && 
-                                (new Date().getTime() - state.lastUpdated) < 24 * 60 * 60 * 1000;
-                
-                if (isRecent && state.isChatActive) {
-                    leadForm.style.display = 'none';
-                    chatWindowContainer.style.display = 'flex';
-                    chatWindowContainer.classList.add('active');
-                }
-            } catch (error) {
-                console.error('Error al restaurar estado visual del chatbot:', error);
-            }
-        }
-        
-        console.log('Chatbot La Célula inicializado correctamente con persistencia entre páginas');
-    } else {
-        console.error('No se pudieron encontrar elementos del chatbot');
-    }
+    console.log('Chatbot La Célula inicializado correctamente con persistencia entre páginas');
     
     // Mostrar mensaje de persistencia en el chatbot (sólo en desarrollo)
     if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {

@@ -37,25 +37,58 @@ if (!$data || !isset($data['history'])) {
 }
 
 // Función para procesar la conversación y generar respuesta
-function generateResponse($conversationHistory) {
-    // Obtener el último mensaje del usuario
-    $lastUserMessage = '';
-    for ($i = count($conversationHistory) - 1; $i >= 0; $i--) {
-        if ($conversationHistory[$i]['role'] === 'user') {
-            $lastUserMessage = $conversationHistory[$i]['parts'][0]['text'];
-            break;
+function generateResponse($conversationHistory, $lastUserMessage) {
+    // 1. Intentar obtener una respuesta basada en reglas
+    $response = getResponseByRules($lastUserMessage, $conversationHistory);
+    
+    // 2. Si no hay regla, consultar a la API de Gemini
+    if (empty($response)) {
+        $apiKey = getenv('GEMINI_API_KEY'); // Carga la API Key desde los secrets de Cloudflare
+        if ($apiKey) {
+            $response = getGeminiResponse($conversationHistory, $apiKey);
         }
     }
 
-    // Sistema de reglas básico para respuestas específicas
-    $response = getResponseByRules($lastUserMessage, $conversationHistory);
-    
-    // Si no hay regla específica, usar respuesta genérica
+    // 3. Si Gemini falla o no responde, usar un fallback
     if (empty($response)) {
         $response = getFallbackResponse($lastUserMessage);
     }
     
     return $response;
+}
+
+/**
+ * Consulta a la API de Gemini para obtener una respuesta inteligente
+ */
+function getGeminiResponse($history, $apiKey) {
+    $apiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=' . $apiKey;
+
+    $payload = json_encode([
+        'contents' => $history,
+        // Aquí puedes añadir 'generationConfig', 'safetySettings', etc. si es necesario
+    ]);
+
+    $ch = curl_init($apiUrl);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'Content-Type: application/json',
+    ]);
+
+    $apiResponse = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+
+    if ($httpCode === 200 && $apiResponse) {
+        $responseData = json_decode($apiResponse, true);
+        if (isset($responseData['candidates'][0]['content']['parts'][0]['text'])) {
+            return $responseData['candidates'][0]['content']['parts'][0]['text'];
+        }
+    }
+    
+    // Si la API falla o la respuesta no es válida, devuelve null
+    return null;
 }
 
 /**
@@ -210,8 +243,17 @@ function getFallbackResponse($userMessage) {
 }
 
 try {
+    // Obtener el último mensaje del usuario para pasarlo a las funciones
+    $lastUserMessage = '';
+    for ($i = count($data['history']) - 1; $i >= 0; $i--) {
+        if ($data['history'][$i]['role'] === 'user') {
+            $lastUserMessage = $data['history'][$i]['parts'][0]['text'];
+            break;
+        }
+    }
+
     // Generar la respuesta
-    $botResponse = generateResponse($data['history']);
+    $botResponse = generateResponse($data['history'], $lastUserMessage);
     
     // Estructura de la respuesta para el frontend
     $response = [

@@ -441,22 +441,5 @@
         script.src = './chatbot.js';
         script.async = true;
         document.body.appendChild(script);
-        
-        // Configurar eventos de botones
-        document.addEventListener('DOMContentLoaded', function() {
-            const toggleBtn = document.getElementById('chatbot-toggle');
-            const leadForm = document.getElementById('lead-form');
-            const leadFormCloseBtn = document.getElementById('lead-form-close');
-            
-            // Mostrar formulario al hacer clic en el botón
-            toggleBtn.addEventListener('click', function() {
-                leadForm.classList.add('active');
-            });
-            
-            // Cerrar formulario
-            leadFormCloseBtn.addEventListener('click', function() {
-                leadForm.classList.remove('active');
-            });
-        });
     })();
 </script>
